@@ -1,0 +1,183 @@
+<html>
+    <head>
+        <style>
+        
+            #personajes_container{ 
+                display: flex;
+               }
+               .barradevida  {    display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #5e5d5d;
+    }
+                 .personaje{  margin: 10px;     }
+                .miniatura{  
+                    height: 100px;
+        width: 100px;
+        background-color: #7e7e7e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+                 }
+            </style>
+    </head>
+    <body>
+        <p> version 2.5 : personaje nuevo con habilidad especial.</p>
+        <p> agrege un tercer personaje que puede autocurarse 1 de vida cada 3 turnos.</p>
+       
+        <button  onclick="select_personaje('personaje 1')"> personaje 1 </button>
+        <button onclick="select_personaje('personaje 2')"> personaje 2 </button>
+        <button onclick="select_personaje('personaje 3')"> personaje 3 </button>
+       
+        <div id="personajes_container">
+            <div class="personaje">
+                <div class="miniatura">
+                    <p id="nombre_personaje"></p>
+                </div>
+                <div id="barravida_jugador" class="barradevida">0</div>
+            </div>
+            <div class="personaje">
+                <div class="miniatura">
+                    <p  id="nombre_enemigo">Enemigo</p>
+                </div>
+                <div id="barravida_enemigo"  class="barradevida">0</div>
+            </div>
+        </div>
+        <button onclick="myFunction()"> Comenzar pelea </button>
+ 
+        <p> Ahora el problema es que el personaje gana salud al mismo tiempo que ataca, asi que necesito un sistema de accione.determinar cuantas acciones va a hacer el personaje en el turno y hacer que se ejecuten con elmismo tiempo de diferencia.</p>
+        </body>
+    <script>
+    var base_de_datos_de_cartas = [
+        { 
+            nombre: 'personaje 1',
+            vida: 10,
+            presicion: 85,
+            atk: 1
+        },
+        { 
+            nombre: 'personaje 2',
+            vida: 12,
+            presicion: 95,
+            atk: 2
+        },
+        { 
+	        nombre: 'personaje 3',
+	        vida: 10,
+            presicion: 90,
+	        atk: 1
+        }
+    ]; 
+    var base_de_datos_enemigos = [
+        { 
+            nombre: 'enemigo 1',
+	        vida: 10,
+            presicion: 90,
+	        atk: 1
+	    },
+	    { 
+	        nombre: 'personaje 2',
+	        vida: 20,
+            presicion: 50,
+            atk: 2
+        }
+    ];
+
+    var  vida;
+    var atk;
+    var presicion;
+    var contador_de_turnos= 0;
+    var nombre;
+    var presicion_enemigo = 90;
+    var acciones;
+    
+    function  select_personaje(a){ 
+        var filter_results = base_de_datos_de_cartas.find( elem => elem.nombre === a);
+        // console.log(filter_results.atk);
+        nombre = filter_results.nombre;
+        vida = filter_results.vida;
+        atk = filter_results.atk;
+        presicion = filter_results.presicion;
+        
+        document.getElementById("nombre_personaje").innerHTML= nombre ;
+        document.getElementById("barravida_jugador").innerHTML= vida ;
+    }
+       
+    var vida_rival= 10; 
+    var atk_rival= 1;
+    var myNumeroAleatorio;
+    
+    document.getElementById("barravida_enemigo").innerHTML= vida_rival;
+    
+    var turno ="turno aliado";
+    var myVar;
+    
+    function myFunction() {
+        myVar = setInterval(myTimer, 2000);
+    }
+    function myTimer(){ 
+        if (turno == "turno aliado" ) {
+            acciones = 1;
+            contador_de_turnos++;
+            console.log("%c turno: "+ contador_de_turnos + " -----------------", 'color: #9D9FA2'  )
+
+          
+            if (nombre == 'personaje 3') {
+                if ( ( contador_de_turnos % 3 ) == 0) {
+                    acciones++; 
+                    if (vida < 10) {
+                        vida++;
+                        console.log('%c curacion', 'color: #bada55'); 
+                        document.getElementById("barravida_jugador").innerHTML= vida ;
+                    }
+                    // contador_de_turnos = 0;
+                }
+            }
+
+            console.log("acciones: " + acciones);
+            myNumeroAleatorio = Math.floor(Math.random()*101);
+            if (myNumeroAleatorio <= presicion ) {
+                vida_rival =  parseInt(vida_rival) -  parseInt(atk);
+                parseInt(vida_rival);
+                document.getElementById("barravida_enemigo").innerHTML= vida_rival;
+                console.log('enemigo pierde ' + atk + ' vida');
+            } else {
+                console.log("ataque fallido de personaje")
+            }
+            turno ="turno enemigo";
+        }
+        else {
+
+            acciones = 1;
+
+            console.log("acciones: " + acciones);
+            myNumeroAleatorio = Math.floor(Math.random()*101);
+            
+            if (myNumeroAleatorio <= presicion_enemigo ) {
+                vida =  parseInt(vida) - parseInt(atk_rival);
+                document.getElementById("barravida_jugador").innerHTML= vida ;
+                console.log('aliado pierde ' + atk_rival + ' vida');
+            } else {
+                console.log("ataque fallido de enemigo")
+            }
+            turno ="turno aliado";
+        }
+        if( vida_rival <= 0){   clearInterval(myVar);  console.log('%c victoria!! ', 'background: #222; color: #bada55'); 
+        
+        setTimeout(function(){
+            alert("victoria");
+            
+            presicion_enemigo = 50;
+            vida_rival= 20; 
+            atk_rival= 2;
+            document.getElementById("nombre_enemigo").innerHTML= "enemigo 1 segunda fase" ;
+            document.getElementById("barravida_enemigo").innerHTML= vida_rival;
+        }, 500);
+    }
+    if( vida <= 0){
+        clearInterval(myVar);  console.log( "derrota" ); 
+        setTimeout(function(){ alert("derrota"); }, 500);
+    }
+}       
+</script>
+</html>

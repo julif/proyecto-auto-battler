@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <style>
+        
+            #personajes_container{ 
+                display: flex;
+               }
+               .barradevida  {    display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #5e5d5d;
+    }
+                 .personaje{  margin: 10px;     }
+                .miniatura{  
+                    height: 100px;
+        width: 100px;
+        background-color: #7e7e7e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+                 }
+            </style>
+    </head>
+    <body>
+        <p> version 3.3 : acciones.</p>
+        <p> sistema que revisa cuantas acciones va a hacer un personaje en su turno y las sepra con un segundo de diferencia.</p>
+       
+
+
+        <p> el problema ahora es diferenciar entre acciones y estados, ademas van a haber acciones que se activan en momentos especificos. </p>
+        </body>
+    <script>
+    var intervalo_entre_acciones = 2000;
+    var acciones;
+
+  
+    var_acciones = setInterval(acciones_personaje, intervalo_entre_acciones);
+    var i = 1;
+    acciones= 4;
+    function acciones_personaje(){   
+        if ( i == acciones) {
+            console.log( "ultima accion");
+            clearInterval(var_acciones);
+            setTimeout(function(){ turno_aliados() }, intervalo_entre_acciones);
+        } else {console.log( "accion:" + i );}
+        i++;
+    }
+
+    function turno_aliados(){   
+        console.log( "turno aliado");
+    }
+</script>
+</html>
